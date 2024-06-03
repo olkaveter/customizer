@@ -4,23 +4,23 @@ Command: npx gltfjsx@6.2.16 public/models/chair.gltf
 */
 
 import * as THREE from 'three';
-import { useGLTF, useTexture } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei';
+import { useCustomize } from "../contexts/Customization";
 
 const Chair = (props) => {
+  const { material, legs, chairColor, cushionColor } = useCustomize();
   const { nodes, materials } = useGLTF('./models/chair.gltf');
 
   const leatherTextureProps = useTexture({
-    map: './textures/leather/Leather_005_baseColor.jpg',
     normalMap: './textures/leather/Leather_005_normal.jpg',
     roughnessMap: './textures/leather/Leather_005_roughness.jpg',
     aoMap: './textures/leather/Leather_005_ambientOcclusion.jpg',
   });
 
   const fabricTextureProps = useTexture({
-    map: './textures/fabric/Fabric_Alcantara_001_basecolor.jpg',
-    normalMap: './textures/fabric/Fabric_Alcantara_001_normal.jpg',
-    roughnessMap: './textures/fabric/Fabric_Alcantara_001_roughness.jpg',
-    aoMap: './textures/fabric/Fabric_Alcantara_001_ambientOcclusion.jpg',
+    normalMap: './textures/fabric/Fabric_Burlap_004_normal.jpg',
+    roughnessMap: './textures/fabric/Fabric_Burlap_004_roughness.jpg',
+    aoMap: './textures/fabric/Fabric_Burlap_004_ambientOcclusion.jpg',
   });
 
 
@@ -36,9 +36,9 @@ const Chair = (props) => {
     THREE.RepeatWrapping;
 
 
-  fabricTextureProps.normalMap.repeat.set(4, 4);
-  fabricTextureProps.roughnessMap.repeat.set(4, 4);
-  fabricTextureProps.aoMap.repeat.set(4, 4);
+  fabricTextureProps.normalMap.repeat.set(8, 8);
+  fabricTextureProps.roughnessMap.repeat.set(8, 8);
+  fabricTextureProps.aoMap.repeat.set(8, 8);
 
   fabricTextureProps.normalMap.wrapS = fabricTextureProps.normalMap.wrapT =
     THREE.RepeatWrapping;
@@ -52,21 +52,35 @@ const Chair = (props) => {
       {...props}
       dispose={null}
     >
-      <mesh geometry={nodes.Chair.geometry}>
-        <meshStandardMaterial {...leatherTextureProps} />
-      </mesh> 
+      <mesh geometry={nodes.Chair.geometry} castShadow>
+        <meshStandardMaterial
+          {...(material === "leather"
+            ? leatherTextureProps
+            : fabricTextureProps)}
+          color={chairColor.color}
+        />
+      </mesh>
       <mesh 
         geometry={nodes.Cushion.geometry} 
-        position={[0, 0.064, 0.045]}>
-        <meshStandardMaterial {...fabricTextureProps} />
+        position={[0, 0.064, 0.045]}
+        castShadow
+        >
+        <meshStandardMaterial
+          {...fabricTextureProps}
+          color={cushionColor.color}
+        />
       </mesh>
       <mesh 
         geometry={nodes.Legs1.geometry} 
-        material={materials.Legs} />
+        material={materials.Legs}
+        visible={legs === 1}
+        castShadow
+      />
       <mesh 
         geometry={nodes.Legs2.geometry} 
         material={materials.Legs}
-        visible={false}
+        visible={legs === 2}
+        castShadow
       />
     </group>
   )

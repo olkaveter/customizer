@@ -17,9 +17,8 @@ const Experience = () => {
       >
         <Stage
           environment="city"
-          intensity={0.6}
-          castShadow={false}
-        >
+          intensity={0.55}
+      >
           <Chair position={[0, -1.2, 0]}/>
         </Stage>
         <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-2}>
@@ -33,7 +32,7 @@ const Experience = () => {
             depthScale={1.2}
             minDepthThreshold={0.4}
             maxDepthThreshold={1.4}
-            color="#101010"
+            color="#273548"
             metalness={0.5}
           />
         </mesh>
